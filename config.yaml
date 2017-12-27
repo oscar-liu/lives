@@ -1,16 +1,12 @@
 -
     name : douyu
     url : https://www.douyu.com/gapi/rkc/directory/0_0/
-    pages : 41
 -
     name : huya
     url : http://www.huya.com/cache.php?m=LiveList&do=getLiveListByPage&tagAll=0&page=
-    pages : 53
 -
     name : panda
     url : https://www.panda.tv/live_lists?status=2&order=person_num&token=&pageno=
-    pages : 18
 -
     name : zhanqi
     url : https://www.zhanqi.tv/api/static/v2.1/live/list/20/
-    pages : 19

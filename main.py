@@ -13,8 +13,8 @@ if __name__ == '__main__':
 
     #单线程
     for x in config:
-        spiders = Live(x['name'],x['url'],x['pages'])
-        spiders.go(2)
+        spiders = Live(x['name'],x['url'])
+        spiders.go()
 
     # demo
     # spiders = Live('douyu','https://www.douyu.com/gapi/rkc/directory/0_0/',2)

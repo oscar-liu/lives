@@ -27,7 +27,7 @@ class Db():
         self.conn.commit()
 
     def insert(self,data):
-        sqlstr = 'insert into user (rid,category,number,name,uid,url,source,create_time) values (%s,"%s",%s,"%s",%s,"%s","%s","%s")'
+        sqlstr = "insert into user (rid,category,number,name,uid,url,source,create_time) values (%s,'%s',%s,'%s',%s,'%s','%s','%s')"
         timestr = str( int(time.time()) )
         sqlval = ( data['rid'],str(data['category']),data['number'],str(data['name']),data['uid'],str(data['url']),str(data['source']),timestr )
         sql = sqlstr % sqlval

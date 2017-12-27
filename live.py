@@ -11,11 +11,12 @@ from db import Db
 
 class Live:
 
-    def __init__(self,live,url,pages):
+    def __init__(self,live,url):
         self.live = live
         self.url = url
-        self.pages = pages
-    
+        self.pages = 1
+
+    # 请求接口
     def getApi(self,pageId):
         pageurl = self.url+str(pageId)
 
@@ -28,12 +29,22 @@ class Live:
         response = requests.get( url = pageurl)
         result = response.text
         return json.loads(result)
-    
-    def insertData(self,datas):
-        db = Db()
-        for d in datas:
-            db.insert(d)
-    
+
+    #获取总页码，决定请求次数
+    def getPageCount(self,datas):
+        if self.live == 'douyu':
+            self.pages = datas['data']['pgcnt']
+        elif self.live == 'huya':
+            self.pages = datas['data']['totalPage']
+        elif self.live == 'panda':
+            self.pages = int(datas['data']['total']/120)
+        elif self.live == 'zhanqi':
+            self.pages = int(datas['data']['cnt']/20)
+        return self.pages
+
+    """------------------数据格式化----------------------"""
+
+    #斗鱼
     def douyu(self,datas):
         _lists = datas['data']['rl']
         _result = []
@@ -50,7 +61,7 @@ class Live:
             _result.append(tmp)
         return _result
 
-    
+    #虎牙
     def huya(self,datas):
         _lists = datas['data']['datas']
         _result = []
@@ -67,6 +78,7 @@ class Live:
             _result.append(tmp)
         return _result
     
+    #熊猫
     def panda(self,datas):
         _lists = datas['data']['items']
         _result = []
@@ -83,6 +95,7 @@ class Live:
             _result.append(tmp)
         return _result
     
+    #战旗
     def zhanqi(self,datas):
         _lists = datas['data']['rooms']
         _result = []
@@ -99,13 +112,24 @@ class Live:
             _result.append(tmp)
         return _result
 
+    #数据入库
     def __insertData(self,datas):
         db = Db()
         for d in datas:
             db.insert(d)
 
-    def go(self,sleep=4):
-        for x in range(self.pages):
+    """
+    执行
+    请求一次接口，获取总页码
+    根据总页，遍历请求接口数据
+    """
+    def go(self,sleep=2):
+        response = self.getApi(1)
+        pages = self.getPageCount(response)
+        print('获取平台总页码数，请等待5秒钟' )
+        time.sleep(5)
+        print(self.live + '分页数数：' + str(pages)+"，开始执行数据遍历请求")
+        for x in range(pages):
             datas = self.getApi( str(x+1) )
             if self.live == 'douyu':
                 datas = self.douyu(datas)
@@ -117,7 +141,7 @@ class Live:
                 datas = self.zhanqi(datas)
             # print(datas)
             self.__insertData(datas)
-            print('--------------insert 数据插入中 第'+str(x+1)+'次---------------')
+            print('-------'+self.live+'-------insert 数据插入中 第'+str(x+1)+'次---------------')
             time.sleep(sleep)
             print('--------------间隔'+str(sleep)+'秒后再次请求---------------')
 
