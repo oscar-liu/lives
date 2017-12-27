@@ -130,8 +130,7 @@ class Live:
         time.sleep(5)
         print(self.live + '分页数数：' + str(pages)+"，开始执行数据遍历请求")
         for x in range(pages):
-            if self.live == 'huya' and x< 76:
-                continue
+            
             datas = self.getApi( str(x+1) )
             if self.live == 'douyu':
                 datas = self.douyu(datas)
