@@ -25,14 +25,29 @@ class Db():
             create_time varchar(30)
             )""")
         self.conn.commit()
+    
+    def checkStr(self,s):
+        tmp = 'None'
+        if s:
+            tmp = str(s)
+            if tmp.find("'") >= 0 :
+                tmp = tmp.replace("'","-官方号")
+        return tmp
+
+    def checkInt(self,i):
+        tmp = 0
+        if i:
+            if type(i) == int:
+                tmp = int(i)
+        return tmp
 
     def insert(self,data):
-        sqlstr = "insert into user (rid,category,number,name,uid,url,source,create_time) values (%s,'%s',%s,'%s',%s,'%s','%s','%s')"
         timestr = str( int(time.time()) )
-        sqlval = ( data['rid'],str(data['category']),data['number'],str(data['name']),data['uid'],str(data['url']),str(data['source']),timestr )
-        sql = sqlstr % sqlval
-        # print(sql)
-        self.cursor.execute(sql)
+        # print(self.checkStr(data['name']))
+        sqlstr = "insert into user (rid,category,number,name,uid,url,source,create_time) values (%s,'%s',%s,'%s',%s,'%s','%s','%s')"
+        sqlval = ( self.checkInt(data['rid']), self.checkStr(data['category']),self.checkInt(data['number']),self.checkStr(data['name']),self.checkInt(data['uid']),self.checkStr(data['url']),self.checkStr(data['source']),timestr )
+        # print(sqlstr % sqlval)
+        self.cursor.execute("insert into user (rid,category,number,name,uid,url,source,create_time) values (%s,'%s',%s,'%s',%s,'%s','%s','%s')" % ( self.checkInt(data['rid']), self.checkStr(data['category']),self.checkInt(data['number']),self.checkStr(data['name']),self.checkInt(data['uid']),self.checkStr(data['url']),self.checkStr(data['source']),timestr ) )
         self.conn.commit()
 
     def select(self,sql):

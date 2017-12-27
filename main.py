@@ -13,6 +13,8 @@ if __name__ == '__main__':
 
     #单线程
     for x in config:
+        if x['name'] == 'douyu':
+            continue
         spiders = Live(x['name'],x['url'])
         spiders.go()
 

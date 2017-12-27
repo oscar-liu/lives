@@ -123,13 +123,15 @@ class Live:
     请求一次接口，获取总页码
     根据总页，遍历请求接口数据
     """
-    def go(self,sleep=2):
+    def go(self,sleep=1):
         response = self.getApi(1)
         pages = self.getPageCount(response)
         print('获取平台总页码数，请等待5秒钟' )
         time.sleep(5)
         print(self.live + '分页数数：' + str(pages)+"，开始执行数据遍历请求")
         for x in range(pages):
+            if self.live == 'huya' and x< 76:
+                continue
             datas = self.getApi( str(x+1) )
             if self.live == 'douyu':
                 datas = self.douyu(datas)
